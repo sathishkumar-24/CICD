@@ -7,6 +7,6 @@ int main(){
    printf("%-15s %-15d\n", a1,a2);
    printf("%-15s %-15d\n", b1,b2);
    printf("%-15s %-15d\n", c1, c2);
-   printf("%-15s %-15d\n", d1, d2);
+   printf("%-15s %-15d\n", d1, dr);
    return 0;
 }
