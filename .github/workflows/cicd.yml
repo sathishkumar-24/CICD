@@ -41,5 +41,5 @@ jobs:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-        - name: Setup Cpp (C++ / C)
+      - name: Setup Cpp (C++ / C)
         uses: aminya/setup-cpp@v0.19.0-1
