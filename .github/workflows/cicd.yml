@@ -34,6 +34,12 @@ jobs:
       ################################
       # Run Linter against code base #
       ################################
+      - name: Artistic Style
+        uses: per1234/artistic-style-action@v1.0.2
+
+      ################################
+      # Run Linter against code base #
+      ################################
       - name: Lint Code Base
         uses: github/super-linter@v4.9.7
         env:
