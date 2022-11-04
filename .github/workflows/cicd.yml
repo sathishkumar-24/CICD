@@ -54,16 +54,16 @@ jobs:
           name: app
           path: ./main.c
           
-#       ################################
-#       #       Pushes bin file        #
-#       ################################  
-#       - name: Pushes bin file
-#         uses: sathishkumar-24/esp_project@main
-#         env:
-#           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-#         with:
-#           source_file: 'main.c'
-#           destination_repo: 'sathishkumar-24/esp_project_release'
-#           user_email: 'sathishkumark1986@gmail.com'
-#           user_name: 'sathishkumar-24'
-#           commit_message: 'A custom message for the commit'
+      ################################
+      #       Pushes bin file        #
+      ################################  
+      - name: Pushes bin file
+        uses: sathishkumar-24/esp_project@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source_file: 'app'
+          destination_repo: 'sathishkumar-24/esp_project_release'
+          user_email: 'sathishkumark1986@gmail.com'
+          user_name: 'sathishkumar-24'
+          commit_message: 'A custom message for the commit'
