@@ -58,7 +58,7 @@ jobs:
       #       Pushes bin file        #
       ################################  
       - name: Pushes bin file
-        uses: sathishkumar-24/esp_project@develop
+        uses: sathishkumar-24/CICD@develop
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
