@@ -18,6 +18,7 @@ jobs:
   Development:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    environment: Development
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -47,10 +48,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_CPP: false
   
-    Staging:
+  Staging:
       # The type of runner that the job will run on
       runs-on: ubuntu-latest
-
+      environment: Staging
+      needs: Development
+      
       # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
 
