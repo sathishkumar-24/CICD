@@ -17,7 +17,7 @@ on:
 jobs:
   Development:
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: linux-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -43,7 +43,7 @@ jobs:
           
   Staging:
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: linux-latest
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -57,7 +57,7 @@ jobs:
           fetch-depth: 0
           
       - name: Pushes bin file
-        uses: sathishkumar-24/CICD@main
+        uses: sathishkumar-24/CICD@master
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
