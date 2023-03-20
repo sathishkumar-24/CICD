@@ -48,7 +48,7 @@ jobs:
       needs: Development
     
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
+      steps:
 
       # Checkout the code base #
       ##########################
