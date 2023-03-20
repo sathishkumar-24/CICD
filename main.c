@@ -11,8 +11,15 @@
 
 int main()
 {
+    int A, B, sum = 0;
     printf("Hello World");
   printf("Hello World");
-
+    // Calculate the addition of A and B
+    // using '+' operator
+    sum = A +B;
+  
+    // Print the sum
+    printf("Sum of A and B is: %d", sum);
+    
     return 0;
 }
