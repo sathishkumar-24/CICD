@@ -17,7 +17,8 @@ on:
 jobs:
   Development:
     # The type of runner that the job will run on
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
+    environment: Development
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -37,13 +38,14 @@ jobs:
         uses: github/super-linter@v4.9.7
         env:
           VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_CPP: false
+          VALIDATE_CPP: true
           
   Staging:
     # The type of runner that the job will run on
-    runs-on: linux-latest
+      runs-on: ubuntu-latest
+      environment: Staging
+      needs: Development
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
