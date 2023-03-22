@@ -31,6 +31,13 @@ jobs:
           # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
 
+      - uses: actions/checkout@v2
+      - uses: per1234/artistic-style-action@v1
+        with:
+          name-patterns: |
+            - '*.cpp'
+            - '*.h'
+            
       ################################
       # Run Linter against code base #
       ################################
