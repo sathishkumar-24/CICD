@@ -1,144 +1,57 @@
-name: 'Copy File to Another Repository'
-description: 'Copy and push a file to another repository'
+name: "Artistic Style"
+description: "Check code formatting using Artistic Style."
 branding:
-  icon: 'git-commit'
-  color: 'blue'
-inputs: # Copied from dmnemec/copy_file_to_another_repo_action
-  source_file:
-    description: 'Source file from the origin directory'
+  icon: at-sign
+  color: purple
+
+inputs:
+  options-file-path:
+    description: "Path to the options file."
+    default: "none"
+    required: false
+  name-patterns:
+    description: "YAML formatted list of name patterns (e.g., *.cpp) of the files to be checked."
     required: true
-  destination_repo:
-    description: 'Destination repository'
-    required: true
-  destination_folder:
-    description: 'Directory to push the file to'
+  target-paths:
+    description: "YAML formatted list of paths to check recursively."
+    default: "- ./"
     required: false
-  user_email:
-    description: 'Email for the git commit'
+  exclude-paths:
+    description: "YAML formatted list of paths to exclude from the check."
+    default: "-"
     required: false
-  user_name:
-    description: 'GitHub username for the commit'
-    required: false
-  destination_branch:
-    description: 'branch to push file to, defaults to main'
-    required: false
-    default: main
-  destination_branch_create:
-    description: 'Destination branch to create for this commit'
-    required: false
-  commit_message:
-    description: 'A custom message for the commit'
-    required: false
-  rename:
-    description: 'Rename the destination file'
-    required: false
-  use_rsync:
-    description: 'Copy files/directories using rsync instead of cp. Experimental feature, please know your use case'
-    required: false
-  git_server:
-    description: 'Git server host, default github.com'
-    required: false
-    default: github.com
-  fetch_depth:
-    description: 'Number of commits to fetch, default 1. Set to 0 to fetch all'
-    required: false
-    default: 1
+
 runs:
   using: "composite"
   steps:
-  - id: generate-temp-dir
-    run: |
-      echo "CLONE_DIR=$(mktemp -d)" >> $GITHUB_ENV
-    shell: bash
-
-  - id: configure-git
-    run: echo "GIT_DEST_URL=https://x-access-token:$API_TOKEN_GITHUB@${{ inputs.git_server }}/${{ inputs.destination_repo }}.git" >> $GITHUB_ENV
-    shell: bash
-  - id: clone-repo
-    run: |
-      echo "Cloning destination git repository"
-      git clone --single-branch --branch ${{ inputs.destination_branch }} --depth="${{ inputs.fetch_depth }}" "$GIT_DEST_URL" "$CLONE_DIR"
-    shell: bash
-    
-  - id: rename
-    run: |
-      if [ -z "${{ inputs.destination_folder }}" ]
-      then
-        export DEST_DIR="$CLONE_DIR"
-      else
-        export DEST_DIR="$CLONE_DIR/${{ inputs.destination_folder }}"
-      fi
-      
-      if [ ! -z "${{ inputs.rename }}" ]
-      then
-        echo "Setting new filename: ${{ inputs.rename }}"
-        echo "DEST_COPY=$DEST_DIR/${{ inputs.rename }}" >> $GITHUB_ENV
-      else
-        echo "DEST_COPY=$DEST_DIR" >> $GITHUB_ENV
-      fi
-    shell: bash
-
-  - id: save-old-directory
-    run: echo "OLDPWD=$PWD" >> $GITHUB_ENV
-    shell: bash
-
-  - id: create-destination-branch
-    run: |
-      cd "$CLONE_DIR"
-      if [ ! -z "${{ inputs.destination_branch_create }}" ]
-      then
-        echo "Creating new branch: ${{ inputs.destination_branch_create }}"
-        git checkout -b "${{ inputs.destination_branch_create }}"
-        echo "OUTPUT_BRANCH=${{ inputs.destination_branch_create }}" >> $GITHUB_ENV
-      else
-        echo "OUTPUT_BRANCH=${{ inputs.destination_branch }}" >> $GITHUB_ENV
-        git checkout "${{ inputs.destination_branch }}"
-      fi
-    shell: bash
-  
-  - id: copy-items
-    run: |
-      cd "$OLDPWD"
-      if [ -z "${{ inputs.use_rsync }}" ]
-      then
-        cp -R "${{ inputs.source_file }}" "$DEST_COPY"
-      else
-        rsync -avrh "${{ inputs.source_file }}" "$DEST_COPY"
-      fi
-    shell: bash
-
-  - id: set-commit-message-default
-    run: |
-      cd "$CLONE_DIR"
-      if [ -z "${{ inputs.commit_message }}" ]
-      then
-        echo "COMMIT_MESSAGE=Update from https://${{ inputs.git_server }}/$GITHUB_REPOSITORY/commit/$GITHUB_SHA" >> $GITHUB_ENV
-      else
-        echo "COMMIT_MESSAGE=${{ inputs.commit_message }}" >> $GITHUB_ENV
-      fi
-    shell: bash
-
-  - id: commit-and-push
-    run: |
-      cd "$CLONE_DIR"
-      git config --global user.email "${{ inputs.user_email }}"
-      git config --global user.name "${{ inputs.user_name }}"
-      echo "Adding git commit"
-      git add .
-      if [ ! -z "$(git diff --cached)" ]
-      then
-        git commit --message "$COMMIT_MESSAGE"
-        export GIT_REMOTE="tmp-$(openssl rand -hex 8)"
-        git remote add "$GIT_REMOTE" "$GIT_DEST_URL"
-        git push -u "$GIT_REMOTE"
-        git remote remove "$GIT_REMOTE"
-      fi
-    shell: bash
-  
-  - id: cd-back-for-good-measure
-    run: cd "$OLDPWD"
-    shell: bash
-    
-  - id: remove-clone-dir-for-good-measure
-    run: rm -rf "$CLONE_DIR"
-    shell: bash
+    - name: "Install Artistic style"
+      env:
+        # See: https://sourceforge.net/projects/astyle/files/astyle/
+        ASTYLE_VERSION: "3.1"
+        ASTYLE_BUILD_PATH: "${{ runner.temp }}/astyle"
+      shell: "bash"
+      run: |
+        ASTYLE_DOWNLOAD_FILENAME="astyle_${{ env.ASTYLE_VERSION }}_linux.tar.gz"
+        wget \
+          --quiet \
+          --directory-prefix="${{ env.ASTYLE_BUILD_PATH }}" \
+          "https://cfhcable.dl.sourceforge.net/project/astyle/astyle/astyle%20${{ env.ASTYLE_VERSION }}/$ASTYLE_DOWNLOAD_FILENAME"
+        # Build Artistic Style
+        cd "${{ env.ASTYLE_BUILD_PATH }}"
+        tar --extract --file="$ASTYLE_DOWNLOAD_FILENAME"
+        cd "${{ env.ASTYLE_BUILD_PATH }}/astyle/build/gcc"
+        make --silent
+        sudo mv "${{ env.ASTYLE_BUILD_PATH }}/astyle/build/gcc/bin/astyle" /usr/bin
+        astyle --version
+    - name: "Install yq"
+      shell: "bash"
+      run: |
+        sudo snap install yq
+    - name: "Check formatting"
+      shell: "bash"
+      run: |
+        "${{ github.action_path }}/artistic-style-check.sh" \
+          "${{ inputs.options-file-path }}" \
+          "${{ inputs.name-patterns }}" \
+          "${{ inputs.target-paths }}" \
+          "${{ inputs.exclude-paths }}"
