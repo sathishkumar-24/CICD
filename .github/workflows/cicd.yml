@@ -35,7 +35,7 @@ jobs:
       - uses: per1234/artistic-style-action@v1
         with:
           name-patterns: |
-            - '*.cpp'
+            - '*.c'
             - '*.h'
             
       ################################
