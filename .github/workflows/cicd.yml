@@ -1,50 +1,60 @@
-# This is a basic workflow to help you get started with Actions
+name: Check code formatting
 
-name: CICD
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
-  push:
-    branches: [ "master", "develop", "release" ]
   pull_request:
-    branches: [ "master", "develop", "release" ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    paths:
+      - ".github/workflows/cicd.yml"
+      - "build/**"
+  push:
+    paths:
+      - ".github/workflows/cicd.yml"
+      - "build/**"
+  # workflow_dispatch event allows the workflow to be triggered manually
+  # See: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#workflow_dispatch
   workflow_dispatch:
-
+  # repository_dispatch event allows the workflow to be triggered via the GitHub API
+  # See: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#repository_dispatch
   repository_dispatch:
-    env:
-    OPTIONS_FILE_PATH: ci/artistic-style.conf
-    NAME_PATTERNS: |
-      - '*.c'
-      - '*.h'
-  
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
+env:
+  OPTIONS_FILE_PATH: ci/artistic-style.conf
+  NAME_PATTERNS: |
+    - '*.ino'
+    - '*.h'
+    - '*.hpp'
+    - '*.hh'
+    - '*.hxx'
+    - '*.h++'
+    - '*.cpp'
+    - '*.cc'
+    - '*.cxx'
+    - '*.c++'
+    - '*.cp'
+    - '*.c'
+    - '*.ipp'
+    - '*.ii'
+    - '*.ixx'
+    - '*.inl'
+    - '*.tpp'
+    - '*.txx'
+    - '*.tpl'
+
 jobs:
-  Development:
-    # The type of runner that the job will run on
+  bootloaders:
     runs-on: ubuntu-latest
-    environment: Development
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      # Checkout the code base #
-      ##########################
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
-          fetch-depth: 0
-
-      - uses: actions/checkout@v2
-      - uses: per1234/artistic-style-action@main
+      - name: Check code formatting
+        uses: per1234/artistic-style-action@main
         with:
           options-file-path: ${{ env.OPTIONS_FILE_PATH }}
           name-patterns: |
             ${{ env.NAME_PATTERNS }}
           target-paths: |
             - build
-            
-     
+
+
+  
