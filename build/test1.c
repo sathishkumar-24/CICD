@@ -328,8 +328,8 @@ void pre_main(void) {
 /* main program starts here */
 int main(void) {
   uint8_t ch;
-int number1, number2, sum;
-   sum = number1 + number2;
+int number1, number2, sum
+   sum = number1+number2
   /*
      Making these local and in registers prevents the need for initializing
      them, and also saves space because code no longer stores to memory.
