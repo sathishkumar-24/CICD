@@ -32,10 +32,12 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/checkout@v2
-      - uses: per1234/artistic-style-action@v1
+      - uses: per1234/artistic-style-action@main
         with:
+          options-file-path: ${{ env.OPTIONS_FILE_PATH }}
           name-patterns: |
-            - '*.c'
-            - '*.h'
+            ${{ env.NAME_PATTERNS }}
+          target-paths: |
+            - build
             
      
