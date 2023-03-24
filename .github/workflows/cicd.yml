@@ -17,7 +17,7 @@ on:
   repository_dispatch:
 
 env:
-  OPTIONS_FILE_PATH: ci/artistic-style.conf
+  OPTIONS_FILE_PATH: ci/astyle_c.options.txt
   NAME_PATTERNS: |
     - '*.ino'
     - '*.h'
