@@ -17,7 +17,7 @@ on:
   repository_dispatch:
 
 env:
-  OPTIONS_FILE_PATH: ci/astyle_c.options.txt
+  OPTIONS_FILE_PATH: ci/arduino-code-style.conf
   NAME_PATTERNS: |
     - '*.ino'
     - '*.h'
