@@ -1,60 +1,27 @@
-name: Check code formatting
+name: CI/CD Pipeline
 
 on:
-  pull_request:
-    paths:
-      - ".github/workflows/cicd.yml"
-      - "build/**"
   push:
-    paths:
-      - ".github/workflows/cicd.yml"
-      - "build/**"
-  # workflow_dispatch event allows the workflow to be triggered manually
-  # See: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#workflow_dispatch
-  workflow_dispatch:
-  # repository_dispatch event allows the workflow to be triggered via the GitHub API
-  # See: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#repository_dispatch
-  repository_dispatch:
-
-env:
-  OPTIONS_FILE_PATH: ci/arduino-code-style.conf
-  NAME_PATTERNS: |
-    - '*.ino'
-    - '*.h'
-    - '*.hpp'
-    - '*.hh'
-    - '*.hxx'
-    - '*.h++'
-    - '*.cpp'
-    - '*.cc'
-    - '*.cxx'
-    - '*.c++'
-    - '*.cp'
-    - '*.c'
-    - '*.ipp'
-    - '*.ii'
-    - '*.ixx'
-    - '*.inl'
-    - '*.tpp'
-    - '*.txx'
-    - '*.tpl'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  bootloaders:
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Check code formatting
-        uses: per1234/artistic-style-action@v1.0.2
-        with:
-          options-file-path: ${{ env.OPTIONS_FILE_PATH }}
-          name-patterns: |
-            ${{ env.NAME_PATTERNS }}
-          target-paths: |
-            - build
+      - name: Format Code with AStyle
+        run: |
+          astyle --options=.astylerc "build/*.c" "*.c"
 
+      - name: Check for Changes after Formatting
+        run: |
+          git diff --exit-code || { echo "Code formatting changes detected. Please commit the changes."; exit 1; }
 
-  
+     
