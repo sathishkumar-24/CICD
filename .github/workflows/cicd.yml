@@ -29,4 +29,34 @@ jobs:
         run: |
           git diff --exit-code || { echo "Code formatting changes detected. Please commit the changes."; exit 1; }
 
-     
+      - name: Bump version and create tag
+        if: github.event_name == 'push'
+        run: |
+          # Extract version number from the commit message if it matches the pattern 'vX.Y.Z'
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          if [[ $COMMIT_MESSAGE =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            # Extract version number from commit message
+            NEW_VERSION=$(echo $COMMIT_MESSAGE | grep -oP '^v\d+\.\d+\.\d+')
+          else
+            # Extract the previous tag from the repository
+            PREVIOUS_TAG=$(git describe --abbrev=0 --tags)
+            
+            # Extract the version number from the previous tag (assuming the tag format is 'vX.Y.Z')
+            PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
+            
+            # Increment version number (assuming semantic versioning X.Y.Z)
+            NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
+          fi
+          
+          # Update version file with the new version number
+          echo $NEW_VERSION > version.txt
+          
+          # Commit the version number increment
+          git commit -am "[version-bump] Bump version to $NEW_VERSION"
+          
+          # Create a new tag with the updated version number
+          git tag v$NEW_VERSION
+          
+          # Push changes and the new tag to the repository
+          git push origin release --tags
+        working-directory: ./path/to/your/project
