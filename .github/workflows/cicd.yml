@@ -41,8 +41,8 @@ jobs:
           # Extract version number from the commit message if it matches the pattern 'vX.Y.Z'
           COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
           if [[ $COMMIT_MESSAGE =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            # Extract version number from commit message
-            NEW_VERSION=$(echo $COMMIT_MESSAGE | grep -oP '^\d+\.\d+\.\d+')
+            # Extract version number from commit message without the 'v'
+            NEW_VERSION=$(echo $COMMIT_MESSAGE | grep -oP 'v\d+\.\d+\.\d+' | sed 's/v//')
           else
           # Extract the previous tag from the repository, fallback to 1.0.0 if no tags
           PREVIOUS_TAG=$(git describe --abbrev=0 --tags || echo "v1.0.0")
