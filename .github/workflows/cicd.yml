@@ -59,4 +59,3 @@ jobs:
           
           # Push changes and the new tag to the repository
           git push origin release --tags
-        working-directory: ./path/to/your/project
