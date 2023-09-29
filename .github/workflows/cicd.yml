@@ -29,6 +29,12 @@ jobs:
         run: |
           git diff --exit-code || { echo "Code formatting changes detected. Please commit the changes."; exit 1; }
 
+      - name: Set up Git
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+        shell: bash
+  
       - name: Bump version and create tag
         if: github.event_name == 'push'
         run: |
