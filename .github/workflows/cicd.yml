@@ -61,7 +61,7 @@ jobs:
           git commit -am "[version-bump] Bump version to $NEW_VERSION"
           
           # Create a new tag with the updated version number
-          git tag v$NEW_VERSION
+          git tag $NEW_VERSION
           
           # Push changes and the new tag to the repository
           git push origin main --tags
