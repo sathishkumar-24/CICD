@@ -16,6 +16,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install AStyle
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y astyle
+          
       - name: Format Code with AStyle
         run: |
           astyle --options=.astylerc "build/*.c"
