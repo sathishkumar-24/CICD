@@ -44,14 +44,14 @@ jobs:
             # Extract version number from commit message
             NEW_VERSION=$(echo $COMMIT_MESSAGE | grep -oP '^v\d+\.\d+\.\d+')
           else
-            # Extract the previous tag from the repository
-            PREVIOUS_TAG=$(git describe --abbrev=0 --tags)
-            
-            # Extract the version number from the previous tag (assuming the tag format is 'vX.Y.Z')
-            PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
-            
-            # Increment version number (assuming semantic versioning X.Y.Z)
-            NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
+          # Extract the previous tag from the repository, fallback to 1.0.0 if no tags
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags || echo "v1.0.0")
+          
+          # Extract the version number from the previous tag (assuming the tag format is 'vX.Y.Z')
+          PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
+          
+          # Increment version number (assuming semantic versioning X.Y.Z)
+          NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
           fi
           
           # Update version file with the new version number
