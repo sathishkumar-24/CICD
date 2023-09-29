@@ -23,7 +23,7 @@ jobs:
           
       - name: Format Code with AStyle
         run: |
-          astyle --options=.astylerc "build/*.c"
+          astyle --options=astylerc.txt "build/*.c"
 
       - name: Check for Changes after Formatting
         run: |
