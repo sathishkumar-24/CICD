@@ -44,8 +44,8 @@ jobs:
       - name: Bump version and create tag
         if: github.event_name == 'push'
         run: |
-          # Extract the previous tag from the repository, fallback to 1.0.0 if no tags
-          PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" || echo "v1.0.0")
+          # Extract the previous tag from the repository, fallback to v1.0.0 if no tags
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null || echo "v1.0.0"
           
           # Extract the version number from the previous tag (assuming the tag format is 'vX.Y.Z')
           PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
