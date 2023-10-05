@@ -40,12 +40,6 @@ jobs:
           TAG=$(git describe --abbrev=0 --tags --match "version*" 2>/dev/null || echo "No tags found")
           echo "Latest Tag: $TAG"
         shell: bash
-
-      - name: Debug Git Describe1
-        run: |
-          TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null || echo "No tags found")
-          echo "Latest Tag: $TAG"
-        shell: bash
         
       - name: Bump version and create tag
         if: github.event_name == 'push'
