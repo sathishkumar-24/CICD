@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -68,8 +68,7 @@ jobs:
         run: |
           echo "GitHub Token: $GH_TOKEN"
           # Extract the previous tag from the repository, fallback to v1.0.0 if no tags
-          # PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null)
-          PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null || echo "No tags found")
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null)
           echo "Git Describe Result: $PREVIOUS_TAG"
           if [ -z "$PREVIOUS_TAG" ]; then
             # If no tags found, set to v1.0.0
