@@ -85,6 +85,6 @@ jobs:
           git push origin main --tags
 
         env:
-          GH_TOKEN_BUMP_VERSION: ${{ secrets.API_TOKEN_BUMP_VERSION }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN_BUMP_VERSION }}
         shell: bash
 
