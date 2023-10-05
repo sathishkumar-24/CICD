@@ -56,6 +56,11 @@ jobs:
           git branch -a
         shell: bash
 
+      - name: Debug GitHub Token
+        run: |
+          echo "GitHub Token: $GH_TOKEN"
+        shell: bash
+
       - name: Bump version and create tag
         if: github.event_name == 'push'
         run: |
