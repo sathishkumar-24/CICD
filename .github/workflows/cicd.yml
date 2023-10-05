@@ -57,7 +57,7 @@ jobs:
             NEW_VERSION=$(echo $COMMIT_MESSAGE | grep -oP 'v\d+\.\d+\.\d+' | sed 's/v//')
           else
           # Extract the previous tag from the repository, fallback to 1.0.0 if no tags
-          PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "version*" || echo "v1.0.0")
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "Version*" || echo "v1.0.0")
           
           # Extract the version number from the previous tag (assuming the tag format is 'vX.Y.Z')
           PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
@@ -70,7 +70,7 @@ jobs:
           echo $NEW_VERSION > version.txt
           
           # Commit the version number increment
-          git commit -am "[version-bump] Bump version to version$NEW_VERSION"
+          git commit -am "[version-bump] Bump version to Version$NEW_VERSION"
           
           # Create a new tag with the updated version number
           git tag v$NEW_VERSION
