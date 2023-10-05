@@ -48,6 +48,12 @@ jobs:
           echo "NEW_VERSION: $NEW_VERSION"
         shell: bash
 
+      - name: Debug Branch Permission
+        run: |
+          git remote -v
+          git branch -a
+        shell: bash
+
       - name: Bump version and create tag
         if: github.event_name == 'push'
         run: |
