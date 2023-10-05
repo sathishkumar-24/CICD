@@ -37,7 +37,7 @@ jobs:
 
       - name: Debug Git Describe
         run: |
-          TAG=$(git describe --abbrev=0 --tags --match "version*" 2>/dev/null || echo "No tags found")
+          TAG=$(git describe --abbrev=0 --tags --match "Version*" 2>/dev/null || echo "No tags found")
           echo "Latest Tag: $TAG"
         shell: bash
         
