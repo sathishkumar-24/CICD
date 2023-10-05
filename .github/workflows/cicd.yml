@@ -63,7 +63,10 @@ jobs:
 
       - name: Bump version and create tag
         if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_BUMP_VERSION }}
         run: |
+          echo "GitHub Token: $GH_TOKEN"
           # Extract the previous tag from the repository, fallback to v1.0.0 if no tags
           PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null)
           if [ -z "$PREVIOUS_TAG" ]; then
@@ -88,8 +91,4 @@ jobs:
           
           # Push changes and the new tag to the repository 
           git push origin main --tags
-
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_BUMP_VERSION }}
         shell: bash
-
