@@ -34,7 +34,13 @@ jobs:
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git config --global user.name "${{ github.actor }}"
         shell: bash
-  
+
+      - name: Debug Git Describe
+        run: |
+          TAG=$(git describe --abbrev=0 --tags --match "version*" 2>/dev/null || echo "No tags found")
+          echo "Latest Tag: $TAG"
+        shell: bash
+      
       - name: Bump version and create tag
         if: github.event_name == 'push'
         run: |
