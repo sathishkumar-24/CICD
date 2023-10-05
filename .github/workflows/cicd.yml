@@ -59,7 +59,7 @@ jobs:
           # Commit the version number increment
           git commit -am "[version-bump] Bump version to v$NEW_VERSION"
       
-          # Create a new tag with the updated version number
+          # Create a new tag with the updated version number 
           git tag v$NEW_VERSION
       
           # Push changes and the new tag to the repository 
