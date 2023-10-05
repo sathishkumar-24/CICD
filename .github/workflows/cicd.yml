@@ -41,6 +41,13 @@ jobs:
           echo "Latest Tag: $TAG"
         shell: bash
         
+      - name: Debug Output
+        run: |
+          echo "PREVIOUS_TAG: $PREVIOUS_TAG"
+          echo "PREVIOUS_VERSION: $PREVIOUS_VERSION"
+          echo "NEW_VERSION: $NEW_VERSION"
+        shell: bash
+
       - name: Bump version and create tag
         if: github.event_name == 'push'
         run: |
