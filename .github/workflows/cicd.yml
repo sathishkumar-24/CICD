@@ -49,11 +49,6 @@ jobs:
           git branch -a
         shell: bash
 
-      - name: Debug GitHub Token
-        run: |
-          echo "GitHub Token: $API_TOKEN_GITHUB"
-        shell: bash
-
       - name: Extract Version Number
         id: extract_version
         run: |
