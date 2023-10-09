@@ -88,6 +88,12 @@ jobs:
           git push origin main --tags
         shell: bash
 
+      - name: Build and Test
+        run: |
+          # Add your build and test commands here
+          echo "Building and testing..."
+        shell: bash
+        
       - name: Release
         if: github.event_name == 'push' && steps.extract_version.outputs.new_version
         run: |
