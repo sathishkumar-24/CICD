@@ -57,7 +57,8 @@ jobs:
       - name: Extract Version Number
         id: extract_version
         run: |
-          PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null)
+          # Try to get the latest tag, fallback to v1.0.0 if no tags found
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null || echo "v1.0.0")
           if [ -z "$PREVIOUS_TAG" ]; then
             # If no tags found, set initial version
             echo "v1.0.0" > version.txt
