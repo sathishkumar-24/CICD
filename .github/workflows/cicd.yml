@@ -76,7 +76,6 @@ jobs:
             fi
           fi
           
-          echo "New Version: $NEW_VERSION" > version.txt
           cat version.txt
         shell: bash
   
