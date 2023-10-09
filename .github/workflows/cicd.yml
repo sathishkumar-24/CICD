@@ -46,11 +46,26 @@ jobs:
             # Extract version number from commit message
             echo $COMMIT_MESSAGE | grep -oP 'v\d+\.\d+\.\d+' | sed 's/v//' > version.txt
           else
-            # Try to get the latest tag, fallback to v1.0.0 if no tags found
+            # Try to get the latest tag, fallback to v0.9.9 if no tags found
             PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null || echo "v0.9.9")
             # Extract the version number from the previous tag
             PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
-            NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
+            MAJOR=$(echo $PREVIOUS_VERSION | cut -d'.' -f1)
+            MINOR=$(echo $PREVIOUS_VERSION | cut -d'.' -f2)
+            PATCH=$(echo $PREVIOUS_VERSION | cut -d'.' -f3)
+
+            # Increment patch version and handle overflow
+            PATCH=$((PATCH + 1))
+            if [ $PATCH -eq 10 ]; then
+              PATCH=0
+              MINOR=$((MINOR + 1))
+              if [ $MINOR -eq 10 ]; then
+                MINOR=0
+                MAJOR=$((MAJOR + 1))
+              fi
+            fi
+
+            NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
             echo "v$NEW_VERSION" > version.txt
           fi
           
