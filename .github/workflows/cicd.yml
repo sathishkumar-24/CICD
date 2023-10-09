@@ -102,6 +102,6 @@ jobs:
           # Create a GitHub release
           gh release create $VERSION ./path/to/your/artifact.zip --title "Release $VERSION" --notes "Release notes for version $VERSION"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
         shell: bash
 
