@@ -59,10 +59,10 @@ jobs:
 
             # Increment patch version and handle overflow
             PATCH=$((PATCH + 1))
-            if [ $PATCH -eq 10 ]; then
+            if [ $PATCH -ge 10 ]; then
               PATCH=0
               MINOR=$((MINOR + 1))
-              if [ $MINOR -eq 10 ]; then
+              if [ $MINOR -ge 10 ]; then
                 MINOR=0
                 MAJOR=$((MAJOR + 1))
               fi
