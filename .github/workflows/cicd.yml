@@ -58,7 +58,7 @@ jobs:
 
       - name: Debug GitHub Token
         run: |
-          echo "GitHub Token: $GH_TOKEN"
+          echo "GitHub Token: $API_TOKEN_GITHUB"
         shell: bash
 
       - name: Bump version and create tag
