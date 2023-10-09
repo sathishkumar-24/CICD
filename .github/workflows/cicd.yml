@@ -64,16 +64,11 @@ jobs:
             echo $COMMIT_MESSAGE | grep -oP 'v\d+\.\d+\.\d+' | sed 's/v//' > version.txt
           else
             # Try to get the latest tag, fallback to v1.0.0 if no tags found
-            PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null)
-            if [ -z "$PREVIOUS_TAG" ]; then
-              # If no tags found, set initial version
-              echo "v1.0.0" > version.txt
-            else
-              # Extract the version number from the previous tag
-              PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
-              NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
-              echo "v$NEW_VERSION" > version.txt
-            fi
+            PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null || echo "v1.0.0")
+            # Extract the version number from the previous tag
+            PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
+            NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
+            echo "v$NEW_VERSION" > version.txt
           fi
           
           cat version.txt
