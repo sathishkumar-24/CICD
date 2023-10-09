@@ -66,6 +66,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
         run: |
+          # Debugging: Print all tags to understand what git describe is finding
+          git show-ref --tags
+    
           # Extract the previous tag from the repository, fallback to v1.0.0 if no tags
           PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null)
           echo "Git Describe Result: $PREVIOUS_TAG"
