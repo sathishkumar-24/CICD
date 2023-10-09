@@ -54,34 +54,40 @@ jobs:
           echo "GitHub Token: $API_TOKEN_GITHUB"
         shell: bash
 
-      - name: Bump version and create tag
-        if: github.event_name == 'push'
-        env:
-          GH_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
+      - name: Extract Version Number
+        id: extract_version
         run: |
-    
-          # Extract the previous tag from the repository, fallback to v1.0.0 if no tags
           PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null)
-          echo "Git Describe Result: $PREVIOUS_TAG"
           if [ -z "$PREVIOUS_TAG" ]; then
-            # If no tags found, set to v1.0.0
-            PREVIOUS_TAG="v1.0.0"
+            # If no tags found, set initial version
+            echo "v1.0.0" > version.txt
+          else
+            # Extract the version number from the previous tag
+            PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
+            NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
+            echo "v$NEW_VERSION" > version.txt
           fi
           
-          # Extract the version number from the previous tag (assuming the tag format is 'vX.Y.Z')
-          PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
+          # Check commit message for vX.Y.Z pattern
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          if [[ $COMMIT_MESSAGE =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            # Extract version number from commit message
+            echo $COMMIT_MESSAGE | grep -oP 'v\d+\.\d+\.\d+' | sed 's/v//' > version.txt
+          fi
           
-          # Increment version number (assuming semantic versioning X.Y.Z)
-          NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
+          cat version.txt
           
-          # Update version file with the new version number
-          echo $NEW_VERSION > version.txt
-          
+        shell: bash
+  
+      - name: Bump version and create tag
+        if: github.event_name == 'push'
+        run: |
+          NEW_VERSION=$(cat version.txt)
           # Commit the version number increment
-          git commit -am "[version-bump] Bump version to v$NEW_VERSION"
+          git commit -am "[version-bump] Bump version to $NEW_VERSION"
           
           # Create a new tag with the updated version number
-          git tag v$NEW_VERSION
+          git tag $NEW_VERSION
           
           # Push changes and the new tag to the repository 
           git push origin main --tags
