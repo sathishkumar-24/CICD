@@ -87,3 +87,17 @@ jobs:
           # Push changes and the new tag to the repository 
           git push origin main --tags
         shell: bash
+
+      - name: Release
+        if: github.event_name == 'push' && steps.extract_version.outputs.new_version
+        run: |
+          NEW_VERSION=$(steps.extract_version.outputs.new_version)
+
+          # Perform release steps here, such as creating release notes, publishing artifacts, etc.
+          echo "Creating release notes for version $NEW_VERSION..."
+          # Add other release steps as needed
+
+          # Tag the release
+          git tag $NEW_VERSION
+          git push origin main --tags
+        shell: bash
