@@ -51,8 +51,11 @@ jobs:
             # Extract the version number from the previous tag
             PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
             MAJOR=$(echo $PREVIOUS_VERSION | cut -d'.' -f1)
+            echo "MAJOR : $MAJOR"
             MINOR=$(echo $PREVIOUS_VERSION | cut -d'.' -f2)
+            echo "MINOR : $MINOR"
             PATCH=$(echo $PREVIOUS_VERSION | cut -d'.' -f3)
+            echo "PATCH : $PATCH"
 
             # Increment patch version and handle overflow
             PATCH=$((PATCH + 1))
@@ -65,7 +68,7 @@ jobs:
               fi
             fi
 
-            NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
+            NEW_VERSION="$MAJOR.$MINOR.$PATCH"
             echo "v$NEW_VERSION" > version.txt
           fi
           
