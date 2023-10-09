@@ -59,14 +59,8 @@ jobs:
         run: |
           # Try to get the latest tag, fallback to v1.0.0 if no tags found
           PREVIOUS_TAG=$(git describe --abbrev=0 --tags --match "v*" 2>/dev/null || echo "v1.0.0")
-          if [ -z "$PREVIOUS_TAG" ]; then
-            # If no tags found, set initial version
-            echo "v1.0.0" > version.txt
-          else
-            # Extract the version number from the previous tag
-            PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
-            NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
-            echo "v$NEW_VERSION" > version.txt
+          if [ ! -f "version.txt" ]; then
+            echo "$PREVIOUS_TAG" > version.txt
           fi
           
           # Check commit message for vX.Y.Z pattern
@@ -74,22 +68,25 @@ jobs:
           if [[ $COMMIT_MESSAGE =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             # Extract version number from commit message
             echo $COMMIT_MESSAGE | grep -oP 'v\d+\.\d+\.\d+' | sed 's/v//' > version.txt
+          else
+            # Extract the version number from the previous tag
+            PREVIOUS_VERSION=$(echo $PREVIOUS_TAG | sed 's/v//')
+            NEW_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. '{++$3; print $1,$2,$3}')
+            echo "v$NEW_VERSION" > version.txt
           fi
           
-          cat version.txt
-          
+          NEW_VERSION=$(cat version.txt)
+          echo "New Version: $NEW_VERSION"
         shell: bash
   
       - name: Bump version and create tag
         if: github.event_name == 'push'
         run: |
-          NEW_VERSION=$(cat version.txt)
+          git add version.txt  # Add version.txt to the staging area
           # Commit the version number increment
-          git commit -am "[version-bump] Bump version to $NEW_VERSION"
-          
+          git commit -m "[version-bump] Bump version to $NEW_VERSION"
           # Create a new tag with the updated version number
-          git tag $NEW_VERSION
-          
+          git tag v$NEW_VERSION
           # Push changes and the new tag to the repository 
           git push origin main --tags
         shell: bash
