@@ -93,15 +93,23 @@ jobs:
           # Add your build and test commands here
           echo "Building and testing..."
         shell: bash
-        
+      - name: Check gh version
+        run: gh --version
+
       - name: Create Release
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         run: |
           # Extract version from the tag name
           VERSION=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
           # Create a GitHub release
-          gh release create $VERSION ./path/to/your/artifact.zip --title "Release $VERSION" --notes "Release notes for version $VERSION"
+          gh release create $VERSION ./artifact.zip --title "Release $VERSION" --notes "Release notes for version $VERSION"
         env:
           GH_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
+        shell: bash
+        
+      - name: Debug Output
+        run: |
+          echo "GitHub Ref: ${{ github.ref }}"
+          echo "New Version: $NEW_VERSION"
         shell: bash
 
