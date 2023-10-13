@@ -102,7 +102,7 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/main')
         run: |
           # Extract version from the tag name
-          VERSION=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+          VERSION=$(cat version.txt)  # Get version from version.txt
           echo "New Versions: $VERSION"
           # Create a GitHub release
           gh release create $VERSION --title "Release $VERSION" --notes "Release notes for version $VERSION"
