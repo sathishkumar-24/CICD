@@ -42,7 +42,7 @@ jobs:
 
   release:
       needs: [analyse-code]
-      if: github.ref == 'refs/heads/main' || github.event.inputs.release == 'y'
+      if: github.event.inputs.release == 'y'
       name: Release to Github
       runs-on: ubuntu-latest
       
