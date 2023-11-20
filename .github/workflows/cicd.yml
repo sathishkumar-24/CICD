@@ -9,9 +9,16 @@ on:
       - main
     tags:
       - "v*.*.*" # Match tags like v1.0.0
-      
+
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release (y/n)?'
+        required: true
+        default: 'y'
 jobs:
-  build:
+  analyse-code:
+    name: Analyse code
     runs-on: ubuntu-latest
 
     steps:
@@ -95,8 +102,7 @@ jobs:
           # Add your build and test commands here
           echo "Building and testing..."
         shell: bash
-      - name: Check gh version
-        run: gh --version
+
 
       - name: Create Release
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/main')
