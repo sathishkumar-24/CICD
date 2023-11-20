@@ -32,16 +32,10 @@ jobs:
         run: |
           git diff --exit-code || { echo "Code formatting changes detected. Please commit the changes."; exit 1; }
 
-      - name: Debug Event Info
-        run: |
-          echo "Event Name: ${{ github.event_name }}"
-          echo "Ref: ${{ github.ref }}"
-        shell: bash
 
   release:
       needs: [analyse-code]
-      ## if: github.ref == 'refs/heads/main' || github.event.inputs.release == 'y'
-      if: github.event_name == 'pull_request' && github.event.pull_request.merged && contains(github.event.pull_request.base.ref, 'release/')
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release')
       name: Release to Github
       runs-on: ubuntu-latest
       
@@ -126,10 +120,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
         shell: bash
-        
-      # - name: Debug Output
-      #   run: |
-      #     echo "GitHub Ref: ${{ github.ref }}"
-      #     echo "New Version: $VERSION"
-      #   shell: bash
-
+      
