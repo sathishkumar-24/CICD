@@ -40,11 +40,11 @@ jobs:
         run: |
           git diff --exit-code || { echo "Code formatting changes detected. Please commit the changes."; exit 1; }
 
-      - name: Set up Git
-        run: |
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git config --global user.name "${{ github.actor }}"
-        shell: bash
+      # - name: Set up Git
+      #   run: |
+      #     git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+      #     git config --global user.name "${{ github.actor }}"
+      #   shell: bash
 
       - name: Extract Version Number
         id: extract_version
@@ -116,9 +116,9 @@ jobs:
           GH_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
         shell: bash
         
-      - name: Debug Output
-        run: |
-          echo "GitHub Ref: ${{ github.ref }}"
-          echo "New Version: $VERSION"
-        shell: bash
+      # - name: Debug Output
+      #   run: |
+      #     echo "GitHub Ref: ${{ github.ref }}"
+      #     echo "New Version: $VERSION"
+      #   shell: bash
 
