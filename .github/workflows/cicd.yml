@@ -10,12 +10,6 @@ on:
     tags:
       - "v*.*.*" # Match tags like v1.0.0
 
-  workflow_dispatch:
-    inputs:
-      release:
-        description: 'Release (y/n)?'
-        required: true
-        default: 'y'
 jobs:
   analyse-code:
     name: Analyse code
@@ -42,7 +36,7 @@ jobs:
 
   release:
       needs: [analyse-code]
-      if: github.event.inputs.release == 'y'
+      if: github.event_name == 'pull_request' && github.event.action == 'closed' && contains(github.event.pull_request.base.ref, 'release/')
       name: Release to Github
       runs-on: ubuntu-latest
       
@@ -97,7 +91,7 @@ jobs:
         shell: bash
   
       - name: Bump version and create tag
-        if: github.event_name == 'push'
+        if: github.event_name == 'pull_request'
         run: |
           git add version.txt  # Add version.txt to the staging area
           NEW_VERSION=$(cat version.txt)  # Get version from version.txt
@@ -117,7 +111,7 @@ jobs:
 
 
       - name: Create Release
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/main')
+        if: github.event_name == 'pull_request' && startsWith(github.ref, 'refs/heads/release')
         run: |
           # Extract version from the tag name
           VERSION=$(cat version.txt)  # Get version from version.txt
