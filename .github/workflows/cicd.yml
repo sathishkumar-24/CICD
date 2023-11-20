@@ -45,7 +45,13 @@ jobs:
       if: github.ref == 'refs/heads/main' || github.event.inputs.release == 'y'
       name: Release to Github
       runs-on: ubuntu-latest
+      
       steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+            fetch-depth: 0
+            
       - name: Set up Git
         run: |
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
