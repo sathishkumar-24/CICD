@@ -2,11 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main", "develop", "release" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main", "develop", "release" ]
     tags:
       - "v*.*.*" # Match tags like v1.0.0
 
