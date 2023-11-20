@@ -40,6 +40,12 @@ jobs:
         run: |
           git diff --exit-code || { echo "Code formatting changes detected. Please commit the changes."; exit 1; }
 
+  release:
+      needs: [analyse-code]
+      if: github.ref == 'refs/heads/main' || github.event.inputs.release == 'y'
+      name: Release to Github
+      runs-on: ubuntu-latest
+      steps:
       - name: Set up Git
         run: |
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
