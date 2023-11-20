@@ -34,7 +34,7 @@ jobs:
 
   release:
       needs: [analyse-code]
-      # if: github.ref == 'refs/heads/main' || github.event.inputs.release == 'y'
+      ## if: github.ref == 'refs/heads/main' || github.event.inputs.release == 'y'
       if: github.event_name == 'pull_request' && github.event.pull_request.merged && contains(github.event.pull_request.base.ref, 'release/')
       name: Release to Github
       runs-on: ubuntu-latest
